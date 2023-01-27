@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from manage_producs.products.api.serializers import ProductModelSerializer
-from manage_producs.products.models import Product
+from manage_producs.products.models import HistorySearchProduct, Product
 
 User = get_user_model()
 
@@ -20,5 +21,11 @@ class ProductViewSet(ModelViewSet):
         return [permission() for permission in permissions]
 
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return response
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        for element in queryset:
+            new = HistorySearchProduct(
+                product=element, ip_address=request.META["REMOTE_ADDR"]
+            )
+            new.save()
+        return Response(serializer.data)
