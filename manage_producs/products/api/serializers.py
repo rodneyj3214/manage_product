@@ -15,14 +15,15 @@ class ProductModelSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        """Custom process for after update model"""
         result = super().update(instance, validated_data)
+        # Send notification on update Product
         self.send_notification_email(instance)
         return result
 
     def send_notification_email(self, instance):
-        email_list = []
-        for user in User.objects.all():
-            email_list.append(user.email)
+        """Send Email notification for all users with tha product info"""
+        email_list = User.objects.values_list("email", flat=True)
         subject = f"Alert! this product was change {instance.name}"
         from_email = "from@example.com"
         text_content = "This message is for notify that this product was change."

@@ -1,4 +1,4 @@
-# Manage Producs
+# Manage Products
 
 Behold My Awesome Project!
 
@@ -15,13 +15,16 @@ Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings
 
 ### Setting Up Your Users
 
--   To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "
+  Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into
+  your browser. Now the user's email should be verified and ready to go.
 
--   To create a **superuser account**, use this command:
+- To create a **superuser account**, use this command:
 
-        $ python manage.py createsuperuser
+      $ python manage.py createsuperuser
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar),
+so that you can see how the site behaves for both kinds of users.
 
 ### Type checks
 
@@ -43,7 +46,9 @@ To run the tests, check your test coverage, and generate an HTML coverage report
 
 ### Live reloading and Sass CSS compilation
 
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
+Moved
+to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading)
+.
 
 ### Celery
 
@@ -56,20 +61,26 @@ cd manage_producs
 celery -A config.celery_app worker -l info
 ```
 
-Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the same folder with *manage.py*, you should be right.
+Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the
+same folder with *manage.py*, you should be right.
 
 ### Email Server
 
-In development, it is often nice to be able to see emails that are being sent from your application. For that reason local SMTP server [MailHog](https://github.com/mailhog/MailHog) with a web interface is available as docker container.
+In development, it is often nice to be able to see emails that are being sent from your application. For that reason
+local SMTP server [MailHog](https://github.com/mailhog/MailHog) with a web interface is available as docker container.
 
 Container mailhog will start automatically when you will run all docker containers.
-Please check [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html) for more details how to start all containers.
+Please
+check [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
+for more details how to start all containers.
 
-With MailHog running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
+With MailHog running, to view messages that are sent by your application, open your browser and go
+to `http://127.0.0.1:8025`
 
 ### Sentry
 
-Sentry is an error logging aggregator service. You can sign up for a free account at <https://sentry.io/signup/?code=cookiecutter> or download and host it yourself.
+Sentry is an error logging aggregator service. You can sign up for a free account
+at <https://sentry.io/signup/?code=cookiecutter> or download and host it yourself.
 The system is set up with reasonable defaults, including 404 logging and integration with the WSGI application.
 
 You must set the DSN url in production.
@@ -80,4 +91,35 @@ The following details how to deploy this application.
 
 ### Docker
 
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+See
+detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
+.
+
+### Commands for local deployment
+
+You will need to build the stack first. To do that, run:
+
+    $ docker-compose -f local.yml build
+
+After this we need to apply migrations in database and create one user for the root
+
+    $ docker-compose -f local.yml run --rm django python manage.py migrate
+    $ docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+We need to deploy application
+
+    $ docker-compose -f local.yml up
+
+
+### Test Application functionality
+
+When django are start we need to open in browser this link `http://localhost:8000/`
+
+This show a template of oauth system, you need to `login`, use the root user created previously.
+
+Next you need to see API documentation  in this url `http://localhost:8000/api/docs/`, you can download the schema and executed endpoint in this documentation.
+
+### Mail test
+
+When we need to test email messages in  product's change we can use this link
+`http://localhost:8025/` in this link we can see mailhog application for the test

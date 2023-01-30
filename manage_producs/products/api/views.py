@@ -14,6 +14,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
 
     def get_permissions(self):
+        """Change permissions for the list can access for all requests"""
         if self.action in ["list"]:
             permissions = [AllowAny]
         else:
@@ -24,6 +25,7 @@ class ProductViewSet(ModelViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         for element in queryset:
+            # Create Record for the product and anonymous request
             new = HistorySearchProduct(
                 product=element, ip_address=request.META["REMOTE_ADDR"]
             )
